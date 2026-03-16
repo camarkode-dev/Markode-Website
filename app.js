@@ -6,18 +6,17 @@ document.addEventListener("DOMContentLoaded", function () {
   const $$ = s => document.querySelectorAll(s);
 
   // ✅ Constants
-  const WHATSAPP_NUMBER = "966552083166";
+  const WHATSAPP_NUMBER = "01090886364";
   const LANG_KEY = "markode_lang";
   const DEFAULT_LANG = "ar";
 
   const waUrl = (text = "") =>
     `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(text)}`;
 
-  // ✅ Utility: Currency Format
   const fmtCurrency = n => {
     const isAr = document.documentElement.lang === "ar";
     const formatted = Number(n).toLocaleString("en-US");
-    return isAr ? `${formatted} ر.س` : `${formatted} SAR`;
+    return isAr ? `${formatted} ج.م` : `${formatted} EGP`;
   };
 
   /* ================================================
@@ -148,7 +147,7 @@ document.addEventListener("DOMContentLoaded", function () {
       "contact-title": "تواصل معنا",
       "intro-text": "نحن هنا للإجابة على استفساراتك ومساعدتك في تحقيق أهدافك الرقمية. ارسل رسالتك وسنعاود التواصل في أقرب وقت.",
       "placeholder-name": "اكتب اسمك الكامل",
-      "placeholder-phone": "رقم الهاتف (مثال: 05xxxxxxxx)",
+      "placeholder-phone": "رقم الهاتف ( xxxxxxxx)",
       "placeholder-email": "البريد الإلكتروني",
       "placeholder-message": "اكتب رسالتك أو استفسارك هنا",
       "services-projects-title": "نماذج تطبيقية لخدماتنا",
@@ -297,7 +296,7 @@ document.addEventListener("DOMContentLoaded", function () {
       "contact-title": "Contact Us",
       "intro-text": "We're here to answer your questions and help achieve your digital goals. Send your message and we'll get back shortly.",
       "placeholder-name": "Your full name",
-      "placeholder-phone": "Phone number (e.g. +9665xxxxxxx)",
+      "placeholder-phone": "Phone number (e.g. xxxxxxx)",
       "placeholder-email": "Email address",
       "placeholder-message": "Write your message or inquiry here",
       "services-projects-title": "Service Samples",
@@ -881,7 +880,7 @@ export default function ProductCard({ item }) {
     <tr><td>النقرات</td><td>3,450</td></tr>
     <tr><td>CTR</td><td>2.88%</td></tr>
     <tr><td>التحويلات</td><td>210</td></tr>
-    <tr><td>تكلفة لكل تحويل</td><td>45 ر.س</td></tr>
+    <tr><td>تكلفة لكل تحويل</td><td>45 ج.م</td></tr>
   </table>
 </section>`,
     code4: `// تتبع بسيط للأحداث
