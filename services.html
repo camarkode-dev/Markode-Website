@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>خدماتنا | Markode</title>
+  <link rel="icon" href="logo.jpg" type="image/jpeg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="language-switch">
+    <button id="ar-btn" class="active">AR</button>
+    <button id="en-btn">EN</button>
+  </div>
+
+    <nav class="navbar">
+    <a href="index.html" id="nav-home">الرئيسية</a>
+    <a href="about.html" id="nav-about">من نحن</a>
+    <a href="services.html" id="nav-services">خدماتنا</a>
+    <a href="plans.html" id="nav-plans">الباقات</a>
+    <a href="privacy.html" id="nav-privacy" class="active">سياسة الخصوصية</a>
+    <a href="contact.html" id="nav-contact">تواصل معنا</a>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-box">
+      <h1 id="services-title"><strong>خدماتنا</strong></h1>
+      <p id="services-desc">نقدم حلولاً متكاملة تشمل التسويق الرقمي، تصميم وتطوير المواقع والتطبيقات، إدارة الحملات الإعلانية، وتحسين تجربة المستخدم.</p>
+      <ul id="services-list">
+        <li>✦ بناء الهوية البصرية وتصميم الشعارات</li>
+        <li>✦ تصميم مواقع احترافية متجاوبة وسريعة</li>
+        <li>✦ تطوير تطبيقات مخصصة للأعمال</li>
+        <li>✦ إدارة الحملات التسويقية على المنصات الرقمية</li>
+        <li>✦ تحسين محركات البحث SEO وزيادة الظهور</li>
+        <li>✦ كتابة المحتوى التسويقي والتصميم الإبداعي</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- نماذج مشاريع كاملة في صفحة الخدمات -->
+  <section id="projects" aria-labelledby="services-projects-title">
+    <h2 id="services-projects-title" style="text-align:center;">نماذج تطبيقية لخدماتنا</h2>
+    <div class="projects">
+
+      <!-- Project 1 -->
+      <article class="project card" aria-labelledby="p1-title">
+        <div class="img" style="background-image:url('123.jpg');"></div>
+        <div class="meta">
+          <h3 id="project-title-1">Ride Me — تطبيق بيع سيارات</h3>
+          <p id="project-desc-1" class="muted">تطبيق لعرض وبيع السيارات مع نظام فلترة متقدم وربط الدفع وحجوزات المعاينة.</p>
+          <div class="tags">
+            <span id="tag-ui" class="tag">UI</span>
+            <span id="tag-ux" class="tag">UX</span>
+            <span id="tag-case-study" class="tag">Case Study</span>
+          </div>
+          <div class="actions">
+            <button id="project1-case-btn" class="btn" onclick="openProjectModal('p1')">عرض الحالة</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Project 2 -->
+      <article class="project card" aria-labelledby="p2-title">
+        <div class="img" style="background-image:url('top-quality.png');"></div>
+        <div class="meta">
+          <h3 id="project-title-2">ERP تطبيق ادارة الطلبات و المنتجات</h3>
+          <p id="project-desc-2" class="muted">تطبيق لإدارة الطلبات و المنتجات مع نظام تتبع وتحليل الأداء.</p>
+          <div class="tags">
+            <span id="tag-mobile" class="tag">Mobile</span>
+            <span id="tag-ux-2" class="tag">UX</span>
+            <span id="tag-rental" class="tag">Rental</span>
+          </div>
+          <div class="actions">
+            <button id="project2-case-btn" class="btn" onclick="openProjectModal('p2')">عرض الحالة</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Project 3 -->
+      <article class="project card">
+        <div class="img" style="background-image:url('125.jpg');"></div>
+        <div class="meta">
+          <h3 id="project-title-3">متجر إلكتروني شامل</h3>
+          <p id="project-desc-3" class="muted">متجر متكامل بدفع آمن وسلة منتجات وإدارة مخزون وخدمات شحن.</p>
+          <div class="tags">
+            <span id="tag-system" class="tag">System</span>
+            <span id="tag-dashboard" class="tag">Dashboard</span>
+          </div>
+          <div class="actions">
+            <button id="project3-case-btn" class="btn" onclick="openProjectModal('p3')">عرض الحالة</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Project 4 -->
+      <article class="project card">
+        <div class="img" style="background-image:url('126.jpg');"></div>
+        <div class="meta">
+          <h3 id="project-title-4">تطبيق طلب وتوصيل مياه</h3>
+          <p id="project-desc-4" class="muted">تطبيق يسمح بطلب المياه مع تتبع الطلبات وإدارة السائقين.</p>
+          <div class="tags">
+            <span id="tag-ads" class="tag">Ads</span>
+            <span id="tag-analytics" class="tag">Analytics</span>
+          </div>
+          <div class="actions">
+            <button id="project4-case-btn" class="btn" onclick="openProjectModal('p4')">عرض الحالة</button>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- Unified Project Modal (used by openProjectModal) -->
+  <div id="modal" class="modal">
+    <div class="modal-content" tabindex="-1" aria-modal="true" role="dialog">
+      <span class="close" id="modalCloseBtn" tabindex="0" aria-label="إغلاق">&times;</span>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <footer>
+    <p id="footer-text">جميع الحقوق محفوظة © 2025 Markode</p>
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الباقات | Markode</title>
+  <link rel="icon" href="logo.jpg" type="image/jpeg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- تبديل اللغة -->
+  <div class="language-switch">
+    <button id="ar-btn" class="active">AR</button>
+    <button id="en-btn">EN</button>
+  </div>
+
+  <!-- القائمة -->
+    <nav class="navbar">
+    <a href="index.html" id="nav-home">الرئيسية</a>
+    <a href="about.html" id="nav-about">من نحن</a>
+    <a href="services.html" id="nav-services">خدماتنا</a>
+    <a href="plans.html" id="nav-plans" class="active">الباقات</a>
+    <a href="privacy.html" id="nav-privacy">سياسة الخصوصية</a>
+    <a href="contact.html" id="nav-contact">تواصل معنا</a>
+  </nav>
+
+  <!-- الغلاف -->
+  <section class="hero">
+    <div class="hero-box">
+      <h1 id="plans-title"><strong>عروض الباقات</strong></h1>
+      <p id="plans-desc">اختار الباقة التي تناسب طموحك واحتياجات عملك، نقدم لك خيارات متنوعة تشمل تصميم الهوية، تطوير المواقع، وإدارة الحملات الإعلانية.</p>
+    </div>
+  </section>
+
+  <!-- الباقات -->
+  <section class="cards">
+    <div class="card">
+      <h3 id="card-title-1">باقة الناشئين</h3>
+      <p id="card-desc-1">تصميم هوية + موقع تعريفي + حملة انطلاقية.</p>
+      <button id="card-btn-1" class="btn" onclick="openOrderModal('باقة الناشئين')">اطلب الآن</button>
+    </div>
+    <div class="card">
+      <h3 id="card-title-2">باقة الشركات</h3>
+      <p id="card-desc-2">حلول متكاملة للتسويق وتطوير المواقع للشركات.</p>
+      <button id="card-btn-2" class="btn" onclick="openOrderModal('باقة الشركات')">اطلب الآن</button>
+    </div>
+    <div class="card">
+      <h3 id="card-title-3">باقة التطوير</h3>
+      <p id="card-desc-3">خدمة تطوير تطبيق أو نظام مخصص حسب الطلب.</p>
+       <button id="card-btn-3" onclick="location.href='contact.html'" class="btn">تواصل معنا</button>
+    </div>
+  </section>
+
+  <!-- نافذة الطلب -->
+  <div id="orderModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <center><h3 id="modal-title">طلب الباقة</h3></center>
+
+      <form action="https://formspree.io/f/xeozlkkv" method="POST" onsubmit="showOrderSuccessMessage(event)">
+        <input type="hidden" id="plan-name" name="plan" value="">
+        <input type="text" name="name" id="modal-name" placeholder="الاسم" required autocomplete="name">
+        <input type="email" name="email" id="modal-email" placeholder="البريد الإلكتروني" required autocomplete="email">
+        <input type="tel" name="phone" id="modal-phone" placeholder="رقم الهاتف" required autocomplete="tel">
+        <textarea name="details" id="modal-details" placeholder="اكتب تفاصيل الطلب" required autocomplete="off"></textarea>
+
+        <p id="order-success-message" class="order-success" role="status" aria-live="polite" style="display:none;">
+          ✅ تم إرسال الطلب بنجاح! سنتواصل معك قريبًا.
+        </p>
+
+        <center><button type="submit" id="modal-submit" class="btn">إرسال الطلب</button></center>
+      </form>
+    </div>
+  </div>
+
+  <!-- الفوتر -->
+  <footer>
+    <p id="footer-text">جميع الحقوق محفوظة © 2025 Markode</p>
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
