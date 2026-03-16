@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const $$ = s => document.querySelectorAll(s);
 
   // ✅ Constants
-  const WHATSAPP_NUMBER = "01090886364";
+  const WHATSAPP_NUMBER = "201090886364";
   const LANG_KEY = "markode_lang";
   const DEFAULT_LANG = "ar";
 
@@ -392,6 +392,9 @@ document.addEventListener("DOMContentLoaded", function () {
       const shouldBeActive = (lang === 'ar' && isArButton) || (lang === 'en' && btn.id === 'en-btn');
       btn.classList.toggle('active', shouldBeActive);
     });
+
+
+    updateQuote();
 
     localStorage.setItem(LANG_KEY, lang);
     // If a modal is open, refresh its content to the new language
