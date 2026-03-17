@@ -683,6 +683,59 @@ function closeProjectModal() {
 window.openProjectModal = openProjectModal;
 window.closeProjectModal = closeProjectModal;
 
+function bindActionButtons() {
+  document.addEventListener('click', event => {
+    const target = event.target.closest('button, a');
+    if (!target) return;
+
+    const projectMap = {
+      'project1-case-btn': 'p1',
+      'project2-case-btn': 'p2',
+      'project3-case-btn': 'p3',
+      'project4-case-btn': 'p4'
+    };
+
+    if (projectMap[target.id]) {
+      event.preventDefault();
+      openProjectModal(projectMap[target.id]);
+      return;
+    }
+
+    if (target.id === 'card-btn-1') {
+      event.preventDefault();
+      openOrderModal('باقة الناشئين');
+      return;
+    }
+    if (target.id === 'card-btn-2') {
+      event.preventDefault();
+      openOrderModal('باقة الشركات');
+      return;
+    }
+    if (target.id === 'card-btn-3') {
+      event.preventDefault();
+      window.location.href = 'contact.html';
+      return;
+    }
+
+    if (target.id === 'qq-send-quote' || target.id === 'waFab') {
+      event.preventDefault();
+      openWhatsAppWithQuote();
+      return;
+    }
+
+    if (target.id === 'chatFab') {
+      event.preventDefault();
+      if (chatBox) chatBox.classList.add('show');
+      return;
+    }
+  });
+
+  // Cleanup in-case ids exist with old onclick attributes
+  ['project1-case-btn','project2-case-btn','project3-case-btn','project4-case-btn','card-btn-1','card-btn-2','card-btn-3','qq-send-quote','waFab','chatFab'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.removeAttribute('onclick');
+  });
+}
 
 const modalTranslations = {
     ar: {
@@ -1043,13 +1096,16 @@ function trackEvent(name, data) {
   const qqHigh = $("#qq-high");
   const qqSvc = $("#qq-service");
 
-  const baseRange = service => ({
-    identity: [3000, 15000],
-    website: [7000, 45000],
-    app: [20000, 200000],
-    marketing: [4000, 80000],
-    ads: [5000, 50000]
-  }[service] || [5000, 20000]);
+  function baseRange(service) {
+    const ranges = {
+      identity: [3000, 15000],
+      website: [7000, 45000],
+      app: [20000, 200000],
+      marketing: [4000, 80000],
+      ads: [5000, 50000]
+    };
+    return ranges[service] || [5000, 20000];
+  }
 
   function applyOptions([low, high]) {
     let multiplier = 1;
@@ -1067,17 +1123,23 @@ function trackEvent(name, data) {
   }
 
   function updateQuote() {
-    if (!qqBudget || !qqOut || !qqLow || !qqHigh || !qqSvc) return;
-    
-    const budgetValue = Number(qqBudget.value);
-    qqOut.textContent = fmtCurrency(budgetValue);
-    
-    let range = baseRange(qqSvc.value);
+    const qqBudgetEl = $("#qq-budget");
+    const qqOutEl = $("#qq-budget-out");
+    const qqLowEl = $("#qq-low");
+    const qqHighEl = $("#qq-high");
+    const qqSvcEl = $("#qq-service");
+
+    if (!qqBudgetEl || !qqOutEl || !qqLowEl || !qqHighEl || !qqSvcEl) return;
+
+    const budgetValue = Number(qqBudgetEl.value);
+    qqOutEl.textContent = fmtCurrency(budgetValue);
+
+    let range = baseRange(qqSvcEl.value);
     range = applyOptions(range);
     range = clampBudget(range, budgetValue);
-    
-    qqLow.textContent = fmtCurrency(range[0]);
-    qqHigh.textContent = fmtCurrency(range[1]);
+
+    qqLowEl.textContent = fmtCurrency(range[0]);
+    qqHighEl.textContent = fmtCurrency(range[1]);
   }
 
   ["input", "change"].forEach(eventType => {
@@ -1199,5 +1261,6 @@ function trackEvent(name, data) {
     }
   });
 
+  bindActionButtons();
   console.log("✅ Markode App Loaded Successfully");
 });
