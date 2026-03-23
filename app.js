@@ -393,6 +393,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function reloadChat() {
+    if (!chatBody) return;
     startChat();
   }
 
@@ -1388,6 +1389,7 @@ function trackEvent(name, data) {
   }
 
   function startChat() {
+    if (!chatBody) return; // Skip chat boot on pages without the widget
     chatBody.innerHTML = '';
     chatStep = 0;
     selectedService = null;
@@ -1609,7 +1611,7 @@ function trackEvent(name, data) {
   chatFab?.addEventListener("click", () => {
     if (chatBox) {
       chatBox.classList.add("show");
-      if (!chatBody.childElementCount) {
+      if (!chatBody || !chatBody.childElementCount) {
         startChat();
       }
     }
