@@ -168,7 +168,7 @@
         </div>
 
         <div class="actions">
-          <button id="project1-case-btn" class="btn" onclick="openProjectModal('p1')">عرض الحالة</button>
+          <button id="project1-case-btn" class="btn">عرض الحالة</button>
         </div>
       </div>
     </article>
@@ -190,7 +190,7 @@
         </div>
 
         <div class="actions">
-          <button id="project2-case-btn" class="btn" onclick="openProjectModal('p2')">عرض الحالة</button>
+          <button id="project2-case-btn" class="btn">عرض الحالة</button>
         </div>
       </div>
     </article>
@@ -211,7 +211,7 @@
         </div>
 
         <div class="actions">
-          <button id="project3-case-btn" class="btn" onclick="openProjectModal('p3')">عرض الحالة</button>
+          <button id="project3-case-btn" class="btn">عرض الحالة</button>
         </div>
       </div>
     </article>
@@ -232,7 +232,7 @@
         </div>
 
         <div class="actions">
-          <button id="project4-case-btn" class="btn" onclick="openProjectModal('p4')">عرض الحالة</button>
+          <button id="project4-case-btn" class="btn">عرض الحالة</button>
         </div>
       </div>
     </article>
@@ -255,19 +255,19 @@
         <div class="card">
           <h3 id="card-title-1">باقة الناشئين</h3>
           <p id="card-desc-1">تصميم هوية + موقع تعريفي + حملة انطلاقية.</p>
-          <button id="card-btn-1" onclick="openOrderModal('باقة الناشئين')" class="btn">اطلب الآن</button>
+          <button id="card-btn-1" class="btn">اطلب الآن</button>
         </div>
 
         <div class="card">
           <h3 id="card-title-2">باقة الشركات</h3>
           <p id="card-desc-2">حلول متكاملة للتسويق وتطوير المواقع للشركات.</p>
-          <button id="card-btn-2" onclick="openOrderModal('باقة الشركات')" class="btn">اطلب الآن</button>
+          <button id="card-btn-2" class="btn">اطلب الآن</button>
         </div>
 
         <div class="card">
           <h3 id="card-title-3">باقة التطوير</h3>
           <p id="card-desc-3">خدمة تطوير تطبيق أو نظام مخصص حسب الطلب.</p>
-          <button id="card-btn-3" onclick="location.href='contact.html'" class="btn">تواصل معنا</button>
+          <button id="card-btn-3" class="btn">تواصل معنا</button>
         </div>
       </div>
     </section>
@@ -321,9 +321,18 @@
           </div>
           
           <div class="row">
+            <label>العملة</label>
+            <div class="currency-switch">
+              <button type="button" id="egp-btn" class="currency-btn">ج.م</button>
+              <button type="button" id="sar-btn" class="currency-btn active">ر.س</button>
+              <button type="button" id="usd-btn" class="currency-btn">$</button>
+            </div>
+          </div>
+          
+          <div class="row">
             <label for="qq-budget" id="qq-budget-label">الميزانية المتوقعة</label>
             <input type="range" id="qq-budget" min="100" max="200000" step="100" value="100"/>
-<div><span class="badge" id="qq-budget-out">100 ج.م</span></div>
+<div><span class="badge" id="qq-budget-out">100 ر.س</span></div>
           </div>
           
           <div class="row">
@@ -366,10 +375,15 @@
 
 
   <!-- Chat FAB -->
-  <button class="fab chat" id="chatFab" aria-label="Chat" title="Chat">💬</button>
+  <button class="fab chat" id="chatFab" aria-label="محادثة" title="محادثة">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M4 4h16a2 2 0 012 2v10a2 2 0 01-2 2H7l-4 4V6a2 2 0 012-2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M8 10h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      <path d="M8 14h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+    </svg>
+  </button>
   <a id="waFab" class="fab wa" aria-label="WhatsApp" title="WhatsApp" target="_blank" rel="noopener noreferrer">
     <svg aria-hidden="true" role="img" width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <!-- phone handset glyph, uses currentColor so it appears white on the green FAB -->
       <path fill="currentColor" d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.11-.27c1.21.49 2.53.76 3.88.76a1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h2.5a1 1 0 011 1c0 1.35.26 2.67.76 3.88.18.42.07.9-.27 1.11l-2.2 2.2z" />
     </svg>
   </a>
@@ -377,13 +391,25 @@
   <!-- Chat Box ✅ -->
   <div class="chat-box" id="chatBox" aria-live="polite" aria-label="محادثة">
     <div class="chat-head">
-      <strong id="chat-title">Markode</strong>
+      <div class="chat-meta">
+        <div class="chat-avatar" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="9" r="3" fill="#ff8800" />
+            <path d="M6 20c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#ff8800" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <div>
+          <strong id="chat-title">Markode</strong>
+          <div id="chat-status" class="chat-status">متصل الآن</div>
+        </div>
+      </div>
       <button id="chatClose" aria-label="Close Chat">✕</button>
     </div>
     <div class="chat-body" id="chatBody"></div>
+    <div class="chat-options" id="chatOptions"></div>
     <form class="chat-form" id="chatForm">
       <input type="text" id="chatInput" placeholder="اكتب رسالتك..." aria-label="رسالة">
-      <button type="submit" class="btn">إرسال</button>
+      <button type="submit" class="btn" id="chat-send-btn">إرسال</button>
     </form>
   </div>
 

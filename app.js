@@ -9,14 +9,64 @@ document.addEventListener("DOMContentLoaded", function () {
   const WHATSAPP_NUMBER = "201090886364";
   const LANG_KEY = "markode_lang";
   const DEFAULT_LANG = "ar";
+  const CURRENCY_KEY = "markode_currency";
+  const DEFAULT_CURRENCY = "SAR";
+
+  let currentCurrency = (localStorage.getItem(CURRENCY_KEY) || DEFAULT_CURRENCY).toUpperCase();
+  let baseBudgetSar = 100; // نحفظ الميزانية بالأساس (ريال) لضمان اتساق التحويل
+
+  // Base amounts are in SAR; convert to the currently selected currency
+  const rates = {
+    SAR: 1,
+    EGP: 8.23,       // 1 SAR ≈ 8.23 EGP
+    USD: 1 / 3.75    // 1 USD ≈ 3.75 SAR
+  };
+
+  const symbols = {
+    EGP: { ar: 'ج.م', en: 'EGP' },
+    SAR: { ar: 'ر.س', en: 'SAR' },
+    USD: { ar: '$', en: 'USD' }
+  };
+
+  const CURRENCY_MAP = {
+    egp: 'EGP',
+    sar: 'SAR',
+    usd: 'USD'
+  };
+
+  const normalizeCurrency = (cur) => {
+    if (!cur) return DEFAULT_CURRENCY;
+    const lower = String(cur).trim().toLowerCase();
+    return CURRENCY_MAP[lower] || (rates[String(cur).toUpperCase()] ? String(cur).toUpperCase() : DEFAULT_CURRENCY);
+  };
 
   const waUrl = (text = "") =>
     `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(text)}`;
 
   const fmtCurrency = n => {
+    const converted = n * rates[currentCurrency];
     const isAr = document.documentElement.lang === "ar";
-    const formatted = Number(n).toLocaleString("en-US");
-    return isAr ? `${formatted} ج.م` : `${formatted} EGP`;
+    const locale = isAr ? "ar-EG" : "en-US";
+    const formatted = new Intl.NumberFormat(locale, {
+      maximumFractionDigits: 0,
+      minimumFractionDigits: 0
+    }).format(converted);
+    return `${formatted} ${symbols[currentCurrency][isAr ? 'ar' : 'en']}`;
+  };
+
+  const getCurrencySymbol = () => {
+    const isAr = document.documentElement.lang === "ar";
+    return symbols[currentCurrency][isAr ? 'ar' : 'en'];
+  };
+
+  const getPriceInCurrentCurrency = (priceInSAR) => {
+    const converted = (priceInSAR * rates[currentCurrency]);
+    const isAr = document.documentElement.lang === "ar";
+    const locale = isAr ? "ar-EG" : "en-US";
+    return new Intl.NumberFormat(locale, {
+      maximumFractionDigits: 0,
+      minimumFractionDigits: 0
+    }).format(converted);
   };
 
   /* ================================================
@@ -133,6 +183,7 @@ document.addEventListener("DOMContentLoaded", function () {
       "qq-send-quote": "📩 أرسل عبر واتساب",
       "qq-note": "* تقدير مبدئي للإرشاد فقط — السعر النهائي بعد مكالمة تعريفية قصيرة.",
       "chat-title": "Markode",
+      "chat-status": "متصل الآن",
       "modal-title": "طلب الباقة",
       "modal-name": "الاسم",
       "modal-email": "البريد الإلكتروني",
@@ -282,6 +333,7 @@ document.addEventListener("DOMContentLoaded", function () {
       "qq-send-quote": "📩 Send via WhatsApp",
       "qq-note": "* Initial estimate for guidance only — final price after a brief discovery call.",
       "chat-title": "Markode",
+      "chat-status": "Online",
       "modal-title": "Order Plan",
       "modal-name": "Your Name",
       "modal-email": "Email",
@@ -326,6 +378,24 @@ document.addEventListener("DOMContentLoaded", function () {
   /* ================================================
       LANGUAGE MANAGEMENT ✅
   ================================================ */
+
+  // Define setActiveCurrency early to avoid TDZ issues
+  function setActiveCurrency(currency) {
+    const egpBtn = $("#egp-btn");
+    const sarBtn = $("#sar-btn");
+    const usdBtn = $("#usd-btn");
+    [egpBtn, sarBtn, usdBtn].forEach(btn => {
+      if (btn) btn.classList.remove('active');
+    });
+    if (currency === 'EGP' && egpBtn) egpBtn.classList.add('active');
+    else if (currency === 'SAR' && sarBtn) sarBtn.classList.add('active');
+    else if (currency === 'USD' && usdBtn) usdBtn.classList.add('active');
+  }
+
+  function reloadChat() {
+    startChat();
+  }
+
   function switchLanguage(lang) {
     if (!translations[lang]) {
       console.error("❌ Language not found:", lang);
@@ -393,6 +463,35 @@ document.addEventListener("DOMContentLoaded", function () {
       btn.classList.toggle('active', shouldBeActive);
     });
 
+    // Update currency button labels per language (guard if not available)
+    const currLabels = {
+      egp: { ar: 'ج.م', en: 'EGP' },
+      sar: { ar: 'ر.س', en: 'SAR' },
+      usd: { ar: '$', en: 'USD' }
+    };
+    const egpBtnEl = $('#egp-btn');
+    const sarBtnEl = $('#sar-btn');
+    const usdBtnEl = $('#usd-btn');
+    if (egpBtnEl) egpBtnEl.textContent = currLabels.egp[lang];
+    if (sarBtnEl) sarBtnEl.textContent = currLabels.sar[lang];
+    if (usdBtnEl) usdBtnEl.textContent = currLabels.usd[lang];
+
+    // Keep active currency button in sync after language switch
+    setActiveCurrency(currentCurrency);
+
+    // Update chat title/status language-specific quick data
+    const isAr = lang === 'ar';
+    const chatStatusEl = $('#chat-status');
+    if (chatStatusEl) chatStatusEl.textContent = isAr ? 'متصل الآن' : 'Online';
+
+    const chatFabEl = $('#chatFab');
+    if (chatFabEl) {
+      chatFabEl.setAttribute('aria-label', isAr ? 'محادثة' : 'Chat');
+      chatFabEl.setAttribute('title', isAr ? 'محادثة' : 'Chat');
+    }
+
+    const chatInputEl = $('#chatInput');
+    if (chatInputEl) chatInputEl.placeholder = isAr ? 'اكتب رسالتك...' : 'Type your message...';
 
     updateQuote();
 
@@ -422,6 +521,8 @@ document.addEventListener("DOMContentLoaded", function () {
     } catch (err) {
       console.warn('Error refreshing modal for language change', err);
     }
+
+    reloadChat();
   }
 
   /* ================================================
@@ -507,6 +608,24 @@ document.addEventListener("DOMContentLoaded", function () {
   const savedLang = localStorage.getItem(LANG_KEY) || DEFAULT_LANG;
   // Track current open modal (declared early to avoid TDZ when switching language)
   let currentModal = { type: null, key: null };
+
+  /* ================================================
+      CHAT WIDGET - Sales Assistant ✅
+  ================================================ */
+  const chatFab = $("#chatFab");
+  const chatBox = $("#chatBox");
+  const chatBody = $("#chatBody");
+  const chatForm = $("#chatForm");
+  const chatInput = $("#chatInput");
+  const chatClose = $("#chatClose");
+  const chatOptions = $("#chatOptions");
+
+  let selectedService = null;
+  let chatStep = 0;
+  let answers = {};
+
+  const isAr = () => document.documentElement.lang === "ar";
+
   switchLanguage(savedLang);
 
 
@@ -594,6 +713,7 @@ const PROJECTS_DATA = {
 };
 
 function openProjectModal(id) {
+  console.log('Opening project modal for', id);
   const data = PROJECTS_DATA[id];
   if (!data) {
     console.warn('Project data not found for', id);
@@ -665,6 +785,7 @@ function openProjectModal(id) {
       </div>
     `;
     projectModal?.classList.add('show');
+    console.log('Added show class to modal');
     document.body.style.overflow = 'hidden';
     currentModal = { type: 'case', key: id };
   } else {
@@ -684,56 +805,48 @@ window.openProjectModal = openProjectModal;
 window.closeProjectModal = closeProjectModal;
 
 function bindActionButtons() {
+  console.log('Binding action buttons...');
+  const bindAction = (id, handler) => {
+    const el = document.getElementById(id);
+    if (!el) {
+      console.warn(`Button ${id} not found`);
+      return;
+    }
+    el.removeAttribute('onclick');
+    el.addEventListener('click', (event) => {
+      console.log(`Button ${id} clicked`);
+      event.preventDefault();
+      handler(event);
+    });
+  };
+
+  const projectMap = {
+    'project1-case-btn': 'p1',
+    'project2-case-btn': 'p2',
+    'project3-case-btn': 'p3',
+    'project4-case-btn': 'p4'
+  };
+
+  Object.entries(projectMap).forEach(([id, projectKey]) => {
+    bindAction(id, () => openProjectModal(projectKey));
+  });
+
+  bindAction('card-btn-1', () => openOrderModal('باقة الناشئين'));
+  bindAction('card-btn-2', () => openOrderModal('باقة الشركات'));
+  bindAction('card-btn-3', () => { window.location.href = 'contact.html'; });
+  bindAction('qq-send-quote', openWhatsAppWithQuote);
+  bindAction('waFab', openWhatsAppWithQuote);
+  bindAction('chatFab', () => { if (chatBox) chatBox.classList.add('show'); });
+
   document.addEventListener('click', event => {
     const target = event.target.closest('button, a');
     if (!target) return;
 
-    const projectMap = {
-      'project1-case-btn': 'p1',
-      'project2-case-btn': 'p2',
-      'project3-case-btn': 'p3',
-      'project4-case-btn': 'p4'
-    };
-
-    if (projectMap[target.id]) {
+    if (target.classList.contains('currency-btn')) {
       event.preventDefault();
-      openProjectModal(projectMap[target.id]);
-      return;
+      const currency = getCurrencyFromElement(target);
+      if (currency) setCurrency(currency);
     }
-
-    if (target.id === 'card-btn-1') {
-      event.preventDefault();
-      openOrderModal('باقة الناشئين');
-      return;
-    }
-    if (target.id === 'card-btn-2') {
-      event.preventDefault();
-      openOrderModal('باقة الشركات');
-      return;
-    }
-    if (target.id === 'card-btn-3') {
-      event.preventDefault();
-      window.location.href = 'contact.html';
-      return;
-    }
-
-    if (target.id === 'qq-send-quote' || target.id === 'waFab') {
-      event.preventDefault();
-      openWhatsAppWithQuote();
-      return;
-    }
-
-    if (target.id === 'chatFab') {
-      event.preventDefault();
-      if (chatBox) chatBox.classList.add('show');
-      return;
-    }
-  });
-
-  // Cleanup in-case ids exist with old onclick attributes
-  ['project1-case-btn','project2-case-btn','project3-case-btn','project4-case-btn','card-btn-1','card-btn-2','card-btn-3','qq-send-quote','waFab','chatFab'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.removeAttribute('onclick');
   });
 }
 
@@ -1087,14 +1200,82 @@ function trackEvent(name, data) {
     qqSend.href = 'javascript:void(0)';
   }
 
-  /* ================================================
-      QUICK QUOTE CALCULATOR ✅
-  ================================================ */
   const qqBudget = $("#qq-budget");
   const qqOut = $("#qq-budget-out");
   const qqLow = $("#qq-low");
   const qqHigh = $("#qq-high");
   const qqSvc = $("#qq-service");
+  const egpBtn = $("#egp-btn");
+  const sarBtn = $("#sar-btn");
+  const usdBtn = $("#usd-btn");
+
+  // قيم الأساس (ريال)
+  const BASE_MIN_SAR = 100;
+  const BASE_MAX_SAR = 200000;
+  const BASE_STEP_SAR = 100;
+
+  const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
+
+  function setBudgetScaleForCurrency(currency) {
+    if (!qqBudget || !rates[currency]) return;
+    qqBudget.min = Math.round(BASE_MIN_SAR * rates[currency]);
+    qqBudget.max = Math.round(BASE_MAX_SAR * rates[currency]);
+    qqBudget.step = Math.max(1, Math.round(BASE_STEP_SAR * rates[currency]));
+  }
+
+  function syncBudgetInputFromBase() {
+    if (!qqBudget || !rates[currentCurrency]) return;
+    setBudgetScaleForCurrency(currentCurrency);
+    const displayVal = Math.round(baseBudgetSar * rates[currentCurrency]);
+    const min = Number(qqBudget.min) || 0;
+    const max = Number(qqBudget.max) || displayVal;
+    qqBudget.value = clamp(displayVal, min, max);
+  }
+
+  const refreshCurrencyUI = () => {
+    setActiveCurrency(currentCurrency);
+    setBudgetScaleForCurrency(currentCurrency);
+    syncBudgetInputFromBase();
+    updateQuote();
+    refreshChatOptions(); // تحديث الخيارات بالعملة الجديدة
+  };
+
+  refreshCurrencyUI();
+
+  const setCurrency = (currency) => {
+    const next = normalizeCurrency(currency);
+    if (!rates[next]) {
+      console.warn('Currency not supported:', currency);
+      return;
+    }
+    currentCurrency = next;
+    localStorage.setItem(CURRENCY_KEY, currentCurrency);
+    refreshCurrencyUI();
+  };
+
+  const getCurrencyFromElement = (el) => {
+    if (!el || !el.id) return null;
+    return normalizeCurrency(el.id.replace('-btn', ''));
+  };
+
+  [egpBtn, sarBtn, usdBtn].forEach(btn => {
+    if (btn) {
+      btn.addEventListener('click', () => {
+        const currency = getCurrencyFromElement(btn);
+        if (currency) setCurrency(currency);
+      });
+    }
+  });
+
+  const currencySwitch = document.querySelector('.currency-switch');
+  if (currencySwitch) {
+    currencySwitch.addEventListener('click', (e) => {
+      const btn = e.target.closest('.currency-btn');
+      if (!btn) return;
+      const currency = getCurrencyFromElement(btn);
+      if (currency) setCurrency(currency);
+    });
+  }
 
   function baseRange(service) {
     const ranges = {
@@ -1131,19 +1312,25 @@ function trackEvent(name, data) {
 
     if (!qqBudgetEl || !qqOutEl || !qqLowEl || !qqHighEl || !qqSvcEl) return;
 
-    const budgetValue = Number(qqBudgetEl.value);
-    qqOutEl.textContent = fmtCurrency(budgetValue);
+    const budgetSar = baseBudgetSar || BASE_MIN_SAR;
+    qqOutEl.textContent = fmtCurrency(budgetSar);
 
     let range = baseRange(qqSvcEl.value);
     range = applyOptions(range);
-    range = clampBudget(range, budgetValue);
+    range = clampBudget(range, budgetSar);
 
     qqLowEl.textContent = fmtCurrency(range[0]);
     qqHighEl.textContent = fmtCurrency(range[1]);
   }
 
   ["input", "change"].forEach(eventType => {
-    qqBudget?.addEventListener(eventType, updateQuote);
+    qqBudget?.addEventListener(eventType, () => {
+      if (!rates[currentCurrency]) return;
+      const valCurr = Number(qqBudget.value) || 0;
+      baseBudgetSar = valCurr / rates[currentCurrency]; // خزّنها بالأساس (SAR)
+      // حدّث بعد تخزين القيمة
+      updateQuote();
+    });
     qqSvc?.addEventListener(eventType, updateQuote);
     ["qq-seo", "qq-cms", "qq-multi", "qq-time"].forEach(id => {
       const el = document.getElementById(id);
@@ -1152,7 +1339,8 @@ function trackEvent(name, data) {
   });
 
   if (qqBudget) {
-    qqBudget.value = 100;
+    baseBudgetSar = BASE_MIN_SAR;
+    syncBudgetInputFromBase();
     updateQuote();
   }
 
@@ -1166,34 +1354,6 @@ function trackEvent(name, data) {
       setTimeout(() => btn.textContent = original, 1500);
     });
   });
-
-  /* ================================================
-      CHAT WIDGET ✅
-  ================================================ */
-  const chatFab = $("#chatFab");
-  const chatBox = $("#chatBox");
-  const chatBody = $("#chatBody");
-  const chatForm = $("#chatForm");
-  const chatInput = $("#chatInput");
-  const chatClose = $("#chatClose");
-
-  const chatScriptAr = [
-    "أهلاً بك! 👋 اختر نوع الخدمة:",
-    "ما ميزانيتك التقريبية؟",
-    "أرسل بريدك أو رقمك للتواصل:"
-  ];
-  
-  const chatScriptEn = [
-    "Welcome! 👋 Choose a service:",
-    "What's your approximate budget?",
-    "Share your contact:"
-  ];
-
-  let chatStep = 0;
-  let chatAnswers = [];
-
-  const getChatScript = () =>
-    document.documentElement.lang === "ar" ? chatScriptAr : chatScriptEn;
 
   function botMsg(text) {
     const div = document.createElement("div");
@@ -1211,17 +1371,246 @@ function trackEvent(name, data) {
     if (chatBody) chatBody.scrollTop = chatBody.scrollHeight;
   }
 
-  function askQuestion() {
-    const script = getChatScript();
-    botMsg(script[chatStep]);
-    if (chatInput) chatInput.placeholder = script[chatStep];
+  function showOptions(options) {
+    if (!chatOptions) return;
+    chatOptions.innerHTML = '';
+    options.forEach(opt => {
+      const btn = document.createElement("button");
+      btn.textContent = opt;
+      btn.addEventListener("click", () => handleOptionClick(opt));
+      chatOptions.appendChild(btn);
+    });
+    chatOptions.style.display = "flex";
+  }
+
+  function hideOptions() {
+    if (chatOptions) chatOptions.style.display = "none";
+  }
+
+  function startChat() {
+    chatBody.innerHTML = '';
+    chatStep = 0;
+    selectedService = null;
+    answers = {};
+    botMsg(isAr() ? "أهلاً بك! 👋 أنا مساعد ذكي يساعدك في اختيار الخدمة المناسبة بسرعة." : "Welcome! 👋 I'm a smart assistant to help you choose the right service quickly.");
+    botMsg(isAr() ? "اختر نوع الخدمة 👇" : "Choose service type 👇");
+    showOptions(isAr() ? ["برمجة", "تسويق", "إعلانات", "إدارة الحسابات"] : ["Programming", "Marketing", "Ads", "Account Management"]);
+  }
+
+  function refreshChatOptions() {
+    // إعادة عرض الخيارات الحالية بالعملة الجديدة دون تغيير chatStep
+    if (!selectedService || chatStep === 0) return; // لا نحتاج لتحديث في الخطوة 0
+
+    const options = [];
+    if (chatStep === 1) {
+      if (selectedService === "برمجة" || selectedService === "Programming") {
+        options.push(...(isAr() ? ["موقع", "تطبيق", "متجر", "نظام خاص"] : ["Website", "App", "Store", "Custom System"]));
+      } else if (selectedService === "تسويق" || selectedService === "Marketing") {
+        options.push(...(isAr() ? ["متجر إلكتروني", "خدمات", "منتجات", "شركة"] : ["E-commerce", "Services", "Products", "Company"]));
+      } else if (selectedService === "إعلانات" || selectedService === "Ads") {
+        options.push(...(isAr() ? ["جوجل", "ميتا", "تيك توك", "سناب"] : ["Google", "Meta", "TikTok", "Snapchat"]));
+      } else if (selectedService === "إدارة الحسابات" || selectedService === "Account Management") {
+        options.push(...(isAr() ? ["1-3 حسابات", "4-10 حسابات", "أكثر من 10 حسابات"] : ["1-3 accounts", "4-10 accounts", "More than 10 accounts"]));
+      }
+    } else if (chatStep === 2) {
+      if (selectedService === "برمجة" || selectedService === "Programming") {
+        options.push(...(isAr() ? ["موقع تجاري", "تطبيق عملي", "نظام إدارة", "حل مخصص"] : ["Business Website", "Practical App", "Management System", "Custom Solution"]));
+      } else if (selectedService === "تسويق" || selectedService === "Marketing") {
+        options.push(...(isAr() ? ["نعم", "لا"] : ["Yes", "No"]));
+      } else if (selectedService === "إعلانات" || selectedService === "Ads") {
+        // Use converted values in both languages to avoid currency mismatch
+        options.push(...(isAr() ? [`أقل من ${getPriceInCurrentCurrency(1000)} ${getCurrencySymbol()}`, `${getPriceInCurrentCurrency(1000)}-${getPriceInCurrentCurrency(5000)} ${getCurrencySymbol()}`, `أكثر من ${getPriceInCurrentCurrency(5000)} ${getCurrencySymbol()}`] : [`Less than ${getPriceInCurrentCurrency(1000)} ${getCurrencySymbol()}`, `${getPriceInCurrentCurrency(1000)}-${getPriceInCurrentCurrency(5000)} ${getCurrencySymbol()}`, `More than ${getPriceInCurrentCurrency(5000)} ${getCurrencySymbol()}`]));
+      } else if (selectedService === "إدارة الحسابات" || selectedService === "Account Management") {
+        options.push(...(isAr() ? ["نعم", "لا"] : ["Yes", "No"]));
+      }
+    } else if (chatStep === 3) {
+      if (selectedService === "برمجة" || selectedService === "Programming") {
+        options.push(...(isAr() ? ["جاهز", "فكرة"] : ["Ready", "Idea"]));
+      } else if (selectedService === "إدارة الحسابات" || selectedService === "Account Management") {
+        options.push(...(isAr() ? ["نعم", "لا"] : ["Yes", "No"]));
+      }
+    } else if (chatStep === 4) {
+      if (selectedService === "برمجة" || selectedService === "Programming") {
+        options.push(...(isAr() ? [`أقل من ${getPriceInCurrentCurrency(2500)} ${getCurrencySymbol()}`, `${getPriceInCurrentCurrency(2500)}-${getPriceInCurrentCurrency(8000)} ${getCurrencySymbol()}`, `أكثر من ${getPriceInCurrentCurrency(8000)} ${getCurrencySymbol()}`] : [`Less than ${getPriceInCurrentCurrency(2500)} ${getCurrencySymbol()}`, `${getPriceInCurrentCurrency(2500)}-${getPriceInCurrentCurrency(8000)} ${getCurrencySymbol()}`, `More than ${getPriceInCurrentCurrency(8000)} ${getCurrencySymbol()}`]));
+      }
+    }
+
+    // إعادة عرض الخيارات فقط إذا كان هناك خيارات
+    if (options.length > 0) {
+      showOptions(options);
+    }
+  }
+
+  function handleOptionClick(option) {
+    userMsg(option);
+    hideOptions();
+    processResponse(option);
+  }
+
+  function processResponse(response) {
+
+    if (chatStep === 0) {
+      // Service selection
+      selectedService = response;
+      if (selectedService === "برمجة" || selectedService === "Programming") {
+        botMsg(isAr() ? "ممتاز! ماذا تريد تحديداً؟" : "Great! What specifically do you need?");
+        showOptions(isAr() ? ["موقع", "تطبيق", "متجر", "نظام خاص"] : ["Website", "App", "Store", "Custom System"]);
+        chatStep++;
+      } else if (selectedService === "تسويق" || selectedService === "Marketing") {
+        botMsg(isAr() ? "رائع! ما نوع نشاطك التجاري؟" : "Awesome! What's your business type?");
+        showOptions(isAr() ? ["متجر إلكتروني", "خدمات", "منتجات", "شركة"] : ["E-commerce", "Services", "Products", "Company"]);
+        chatStep++;
+      } else if (selectedService === "إعلانات" || selectedService === "Ads") {
+        botMsg(isAr() ? "ممتاز! ما المنصة المستهدفة؟" : "Excellent! Which platform?");
+        showOptions(isAr() ? ["جوجل", "ميتا", "تيك توك", "سناب"] : ["Google", "Meta", "TikTok", "Snapchat"]);
+        chatStep++;
+      } else if (selectedService === "إدارة الحسابات" || selectedService === "Account Management") {
+        botMsg(isAr() ? "جيد! كم عدد الحسابات؟" : "Good! How many accounts?");
+        showOptions(isAr() ? ["1-3 حسابات", "4-10 حسابات", "أكثر من 10 حسابات"] : ["1-3 accounts", "4-10 accounts", "More than 10 accounts"]);
+        chatStep++;
+      }
+    } else if (chatStep === 1) {
+      if (selectedService === "برمجة" || selectedService === "Programming") {
+        // Sub-service for programming
+        answers.subService = response;
+        botMsg(isAr() ? "ما الهدف من المشروع؟" : "What's the project goal?");
+        showOptions(isAr() ? ["موقع تجاري", "تطبيق عملي", "نظام إدارة", "حل مخصص"] : ["Business Website", "Practical App", "Management System", "Custom Solution"]);
+        chatStep++;
+      } else if (selectedService === "تسويق" || selectedService === "Marketing") {
+        answers.businessType = response;
+        botMsg(isAr() ? "لديك موقع أو حسابات سوشيال؟" : "Do you have a website or social accounts?");
+        showOptions(isAr() ? ["نعم", "لا"] : ["Yes", "No"]);
+        chatStep++;
+      } else if (selectedService === "إعلانات" || selectedService === "Ads") {
+        answers.platform = response;
+        botMsg(isAr() ? "ما ميزانيتك الإعلانية؟" : "What's your ad budget?");
+        showOptions(isAr()
+          ? [`أقل من ${getPriceInCurrentCurrency(1000)} ${getCurrencySymbol()}`, `${getPriceInCurrentCurrency(1000)}-${getPriceInCurrentCurrency(5000)} ${getCurrencySymbol()}`, `أكثر من ${getPriceInCurrentCurrency(5000)} ${getCurrencySymbol()}`]
+          : [`Less than ${getPriceInCurrentCurrency(1000)} ${getCurrencySymbol()}`, `${getPriceInCurrentCurrency(1000)}-${getPriceInCurrentCurrency(5000)} ${getCurrencySymbol()}`, `More than ${getPriceInCurrentCurrency(5000)} ${getCurrencySymbol()}`]
+        );
+        chatStep++;
+      } else if (selectedService === "إدارة الحسابات" || selectedService === "Account Management") {
+        answers.accountCount = response;
+        botMsg(isAr() ? "تريد تصميم محتوى؟" : "Want content design?");
+        showOptions(isAr() ? ["نعم", "لا"] : ["Yes", "No"]);
+        chatStep++;
+      }
+    } else if (chatStep === 2) {
+      if (selectedService === "برمجة" || selectedService === "Programming") {
+        answers.goal = response;
+        botMsg(isAr() ? "المشروع جاهز أم مجرد فكرة؟" : "Is the project ready or just an idea?");
+        showOptions(isAr() ? ["جاهز", "فكرة"] : ["Ready", "Idea"]);
+        chatStep++;
+      } else if (selectedService === "تسويق" || selectedService === "Marketing") {
+        answers.hasSocial = response;
+        // Directly send to WhatsApp
+        const summary = buildSummary();
+        window.open(waUrl(summary), "_blank", "noopener,noreferrer");
+        botMsg(isAr() ? "✅ تم الإرسال للواتساب. سنتواصل معك قريباً!" : "✅ Sent to WhatsApp. We'll contact you soon!");
+        // Reset
+        setTimeout(() => {
+          chatStep = 0;
+          selectedService = null;
+          answers = {};
+        }, 3000);
+      } else if (selectedService === "إعلانات" || selectedService === "Ads") {
+        answers.budget = response;
+        // Offer and send
+        botMsg(isAr() ? `إدارة الحملات تبدأ من ${getPriceInCurrentCurrency(1000)} ${getCurrencySymbol()} شهرياً مع تحسين النتائج وتقليل تكلفة العميل.` : `Campaign management starts at ${getPriceInCurrentCurrency(1000)} ${getCurrencySymbol()}/month with result optimization and cost reduction.`);
+        const summary = buildSummary();
+        window.open(waUrl(summary), "_blank", "noopener,noreferrer");
+        botMsg(isAr() ? "✅ تم الإرسال للواتساب. سنتواصل معك قريباً!" : "✅ Sent to WhatsApp. We'll contact you soon!");
+        // Reset
+        setTimeout(() => {
+          chatStep = 0;
+          selectedService = null;
+          answers = {};
+        }, 3000);
+      } else if (selectedService === "إدارة الحسابات" || selectedService === "Account Management") {
+        answers.contentDesign = response;
+        botMsg(isAr() ? "تريد الرد على العملاء؟" : "Want customer replies?");
+        showOptions(isAr() ? ["نعم", "لا"] : ["Yes", "No"]);
+        chatStep++;
+      }
+    } else if (chatStep === 3) {
+      if (selectedService === "برمجة" || selectedService === "Programming") {
+        answers.status = response;
+        botMsg(isAr() ? "ما ميزانيتك التقريبية؟" : "What's your approximate budget?");
+        showOptions(isAr() ? [`أقل من 2500 ${getCurrencySymbol()}`, `2500-8000 ${getCurrencySymbol()}`, `أكثر من 8000 ${getCurrencySymbol()}`] : [`Less than ${getPriceInCurrentCurrency(2500)} ${getCurrencySymbol()}`, `${getPriceInCurrentCurrency(2500)}-${getPriceInCurrentCurrency(8000)} ${getCurrencySymbol()}`, `More than ${getPriceInCurrentCurrency(8000)} ${getCurrencySymbol()}`]);
+        chatStep++;
+      } else if (selectedService === "إدارة الحسابات" || selectedService === "Account Management") {
+        answers.customerReply = response;
+        // Offer and send
+        botMsg(isAr() ? `باقات الإدارة تبدأ من ${getPriceInCurrentCurrency(1200)} ${getCurrencySymbol()} شهرياً.` : `Management packages start at ${getPriceInCurrentCurrency(1200)} ${getCurrencySymbol()}/month.`);
+        const summary = buildSummary();
+        window.open(waUrl(summary), "_blank", "noopener,noreferrer");
+        botMsg(isAr() ? "✅ تم الإرسال للواتساب. سنتواصل معك قريباً!" : "✅ Sent to WhatsApp. We'll contact you soon!");
+        // Reset
+        setTimeout(() => {
+          chatStep = 0;
+          selectedService = null;
+          answers = {};
+        }, 3000);
+      }
+    } else if (chatStep === 4) {
+      if (selectedService === "برمجة" || selectedService === "Programming") {
+        answers.budget = response;
+        // Offer based on subService
+        let offer = "";
+        if (answers.subService === "موقع" || answers.subService === "Website") {
+          offer = isAr() ? `المواقع تبدأ من ${getPriceInCurrentCurrency(2500)} ${getCurrencySymbol()}` : `Websites start at ${getPriceInCurrentCurrency(2500)} ${getCurrencySymbol()}`;
+        } else if (answers.subService === "تطبيق" || answers.subService === "App") {
+          offer = isAr() ? `التطبيقات تبدأ من ${getPriceInCurrentCurrency(8000)} ${getCurrencySymbol()}` : `Apps start at ${getPriceInCurrentCurrency(8000)} ${getCurrencySymbol()}`;
+        } else if (answers.subService === "متجر" || answers.subService === "Store") {
+          offer = isAr() ? `المتاجر تبدأ من ${getPriceInCurrentCurrency(3500)} ${getCurrencySymbol()}` : `Stores start at ${getPriceInCurrentCurrency(3500)} ${getCurrencySymbol()}`;
+        } else {
+          offer = isAr() ? `الأنظمة تبدأ من ${getPriceInCurrentCurrency(5000)} ${getCurrencySymbol()}` : `Systems start at ${getPriceInCurrentCurrency(5000)} ${getCurrencySymbol()}`;
+        }
+        botMsg(offer);
+        const summary = buildSummary();
+        window.open(waUrl(summary), "_blank", "noopener,noreferrer");
+        botMsg(isAr() ? "✅ تم الإرسال للواتساب. سنتواصل معك قريباً!" : "✅ Sent to WhatsApp. We'll contact you soon!");
+        // Reset
+        setTimeout(() => {
+          chatStep = 0;
+          selectedService = null;
+          answers = {};
+        }, 3000);
+      }
+    }
+  }
+
+  function buildSummary() {
+    const isAr = document.documentElement.lang === "ar";
+    let summary = isAr ? "📋 طلب استشارة:\n" : "📋 Consultation Request:\n";
+    summary += isAr ? `• الخدمة: ${selectedService}\n` : `• Service: ${selectedService}\n`;
+
+    // Map keys to readable labels
+    const keyLabels = {
+      subService: isAr ? "نوع الخدمة الفرعية" : "Sub-Service Type",
+      businessType: isAr ? "نوع النشاط التجاري" : "Business Type",
+      platform: isAr ? "المنصة المستهدفة" : "Target Platform",
+      accountCount: isAr ? "عدد الحسابات" : "Number of Accounts",
+      goal: isAr ? "هدف المشروع" : "Project Goal",
+      status: isAr ? "حالة المشروع" : "Project Status",
+      budget: isAr ? "الميزانية" : "Budget",
+      hasSocial: isAr ? "لديه موقع أو حسابات" : "Has Website/Social",
+      contentDesign: isAr ? "تصميم المحتوى" : "Content Design",
+      customerReply: isAr ? "الرد على العملاء" : "Customer Replies"
+    };
+
+    Object.entries(answers).forEach(([key, val]) => {
+      const label = keyLabels[key] || key;
+      summary += `• ${label}: ${val}\n`;
+    });
+    return summary;
   }
 
   chatFab?.addEventListener("click", () => {
     if (chatBox) {
       chatBox.classList.add("show");
-      if (chatBody && !chatBody.childElementCount) {
-        askQuestion();
+      if (!chatBody.childElementCount) {
+        startChat();
       }
     }
   });
@@ -1233,32 +1622,10 @@ function trackEvent(name, data) {
   chatForm?.addEventListener("submit", e => {
     e.preventDefault();
     const inputValue = (chatInput?.value || "").trim();
-    
     if (!inputValue) return;
-
     userMsg(inputValue);
-    chatAnswers[chatStep] = inputValue;
     if (chatInput) chatInput.value = "";
-    chatStep++;
-
-    const script = getChatScript();
-    if (chatStep < script.length) {
-      askQuestion();
-    } else {
-      const isAr = document.documentElement.lang === "ar";
-      const [service, budget, contact] = chatAnswers;
-      const summary = isAr
-        ? `📋 ملخص الطلب:\n• الخدمة: ${service}\n• الميزانية: ${budget}\n• التواصل: ${contact}`
-        : `📋 Request Summary:\n• Service: ${service}\n• Budget: ${budget}\n• Contact: ${contact}`;
-      
-      window.open(waUrl(summary), "_blank", "noopener,noreferrer");
-      botMsg(isAr ? "✅ تم الإرسال للواتساب." : "✅ Sent to WhatsApp.");
-      
-      // Reset chat
-      chatStep = 0;
-      chatAnswers = [];
-      setTimeout(askQuestion, 600);
-    }
+    processResponse(inputValue);
   });
 
   bindActionButtons();
