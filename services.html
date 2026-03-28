@@ -14,11 +14,12 @@
       gtag('js', new Date());
       gtag('config', 'G-433DS9F84G');
     }
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(loadAnalytics, { timeout: 3000 });
-    } else {
-      window.addEventListener('load', () => setTimeout(loadAnalytics, 1500), { once: true });
-    }
+    ['pointerdown', 'keydown', 'touchstart'].forEach(function(eventName) {
+      window.addEventListener(eventName, loadAnalytics, { once: true, passive: true });
+    });
+    window.addEventListener('load', function() {
+      setTimeout(loadAnalytics, 15000);
+    }, { once: true });
   </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -142,6 +143,6 @@
     <p id="footer-text">جميع الحقوق محفوظة © 2025 Markode</p>
   </footer>
 
-  <script src="app.js" defer></script>
+  <script src="app.min.js" defer></script>
 </body>
 </html>

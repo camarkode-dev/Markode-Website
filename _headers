@@ -1,6 +1,9 @@
 /logo-64.png
   Cache-Control: public, max-age=2592000, immutable
 
+/logo-56.jpg
+  Cache-Control: public, max-age=2592000, immutable
+
 /logo-96.png
   Cache-Control: public, max-age=2592000, immutable
 
@@ -35,4 +38,7 @@
   Cache-Control: public, max-age=2592000, immutable
 
 /app.js
+  Cache-Control: public, max-age=2592000, immutable
+
+/app.min.js
   Cache-Control: public, max-age=2592000, immutable
