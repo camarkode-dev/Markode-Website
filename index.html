@@ -20,7 +20,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css">
+  <link rel="preload" href="style.css" as="style" onload="this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="style.css"></noscript>
 </head>
 
 
@@ -50,7 +51,8 @@
     </div>
 
     <img src="piuter-optimized.jpg" alt="Markode Cover" class="hero-img"
-         width="928" height="1152" fetchpriority="high" loading="eager" decoding="async">
+         width="928" height="1152" sizes="(max-width: 1024px) 90vw, 662px"
+         fetchpriority="high" loading="eager" decoding="async">
 
     <!-- Ticker ✅ مصحح -->
     <div class="ticker" aria-live="polite">
