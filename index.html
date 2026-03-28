@@ -45,6 +45,7 @@
 
   <!-- Performance -->
   <link rel="preload" href="style.css" as="style" onload="this.rel='stylesheet'">
+  <link rel="preload" href="piuter-optimized-720.jpg" as="image">
   <noscript><link rel="stylesheet" href="style.css"></noscript>
 
   <script type="application/ld+json">
@@ -93,11 +94,13 @@
       </p>
     </div>
 
-    <img src="piuter-optimized.jpg"
+    <img src="piuter-optimized-720.jpg"
+         srcset="piuter-optimized-720.jpg 720w, piuter-optimized.jpg 928w"
+         sizes="(max-width: 720px) 100vw, 720px"
          alt="وكالة Markode للتسويق الرقمي وتطوير المواقع"
          class="hero-img"
-         width="928" height="1152"
-         loading="eager" decoding="async">
+         width="720" height="894"
+         loading="eager" fetchpriority="high" decoding="async">
 
     <!-- Ticker ✅ مصحح -->
     <div class="ticker" aria-live="polite">
