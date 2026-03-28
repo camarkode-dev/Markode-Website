@@ -1,0 +1,3 @@
+# Long caching for static assets (images, CSS, JS)
+/*.(jpg|jpeg|png|webp|gif|svg|css|js)
+  Cache-Control: public, max-age=2592000, immutable

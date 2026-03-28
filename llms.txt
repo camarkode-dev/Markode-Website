@@ -1,0 +1,2 @@
+This file is included to resolve the missing /llms.txt request.
+It exists to prevent a 404 response for markode.co/llms.txt.

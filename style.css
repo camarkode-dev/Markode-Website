@@ -242,6 +242,7 @@ nav.navbar a:hover::before {
   padding: 36px;
   margin: 0 auto;
   border-radius: 22px;
+  width: min(100%, 820px);
   max-width: min(940px, calc(var(--site-max) - 80px));
   box-shadow: 0 0 40px rgba(0,0,0,.44);
   backdrop-filter: blur(12px);
@@ -266,7 +267,9 @@ nav.navbar a:hover::before {
 }
 
 .hero img {
+  width: min(100%, 720px);
   max-width: 100%;
+  height: auto;
   border-radius: 15px;
   margin: 30px auto 0;
   display: block;
