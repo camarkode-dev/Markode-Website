@@ -3,13 +3,24 @@
 <head>
 
   <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-433DS9F84G"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-433DS9F84G');
-
+    function loadAnalytics() {
+      if (window.__markodeAnalyticsLoaded) return;
+      window.__markodeAnalyticsLoaded = true;
+      const script = document.createElement('script');
+      script.async = true;
+      script.src = 'https://www.googletagmanager.com/gtag/js?id=G-433DS9F84G';
+      document.head.appendChild(script);
+      gtag('js', new Date());
+      gtag('config', 'G-433DS9F84G');
+    }
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(loadAnalytics, { timeout: 3000 });
+    } else {
+      window.addEventListener('load', () => setTimeout(loadAnalytics, 1500), { once: true });
+    }
   </script>
 
   <!-- Canonical -->
@@ -40,12 +51,11 @@
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
 
-  <link rel="icon" href="logo-96.png" type="image/png">
+  <link rel="icon" href="logo-64.png" type="image/png">
 
   <!-- Performance -->
-  <link rel="preload" href="style.css" as="style" onload="this.rel='stylesheet'">
-  <link rel="preload" href="piuter-lcp.jpg" as="image">
-  <noscript><link rel="stylesheet" href="style.css"></noscript>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preload" href="piuter-lcp-662.jpg" as="image" imagesrcset="piuter-lcp-662.jpg 662w, piuter-lcp.jpg 720w" imagesizes="(max-width: 720px) 100vw, 662px">
 
   <script type="application/ld+json">
   {
@@ -93,12 +103,12 @@
       </p>
     </div>
 
-    <img src="piuter-lcp.jpg"
-         srcset="piuter-lcp.jpg 720w, piuter-optimized.jpg 928w"
-         sizes="(max-width: 720px) 100vw, 720px"
+    <img src="piuter-lcp-662.jpg"
+         srcset="piuter-lcp-662.jpg 662w, piuter-lcp.jpg 720w"
+         sizes="(max-width: 720px) 100vw, 662px"
          alt="وكالة Markode للتسويق الرقمي وتطوير المواقع"
          class="hero-img"
-         width="720" height="894"
+         width="662" height="823"
          loading="eager" fetchpriority="high" decoding="async">
 
     <!-- Ticker ✅ مصحح -->
@@ -184,7 +194,7 @@
   <header class="header">
     <div class="container">
       <div class="brand">
-        <img src="logo-96.png"
+        <img src="logo-64.png"
              alt="لوغو شركة Markode" width="56" height="56" loading="eager" decoding="async" />
         <div>
           <h1 id="header-title">ماركود — محفظة الأعمال</h1>

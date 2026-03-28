@@ -266,14 +266,14 @@ nav.navbar a:hover::before {
 }
 
 .hero img {
-  width: min(100%, 720px);
+  width: min(100%, 662px);
   max-width: 100%;
   height: auto;
   border-radius: 15px;
   margin: 30px auto 0;
   display: block;
   box-shadow: 0 0 20px rgba(0,0,0,.4);
-  aspect-ratio: 720 / 894;
+  aspect-ratio: 662 / 823;
   object-fit: cover;
 }
 
