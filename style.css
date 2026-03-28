@@ -29,7 +29,7 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: var(--base-font); }
-body { min-height: 100vh; background: radial-gradient(circle at 20% 20%, rgba(14,165,164,.25), rgba(15,23,42,.94) 50%), url(background-optimized.jpg) no-repeat center center fixed; background-size: cover; color: #fff; direction: rtl; line-height: 1.75; padding-top: var(--lang-fixed-offset, 0); font-family: 'Cairo', sans-serif; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+body { min-height: 100vh; background: radial-gradient(circle at 20% 20%, rgba(14,165,164,.25), rgba(15,23,42,.94) 50%), url(background-optimized.jpg) no-repeat center center fixed; background-size: cover; color: #fff; direction: rtl; line-height: 1.75; padding-top: var(--lang-fixed-offset, 0); font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 
 
 html { font-size: var(--base-font); }

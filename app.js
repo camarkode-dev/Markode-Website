@@ -1184,10 +1184,13 @@ function trackEvent(name, data) {
   }
 
   function openWhatsAppWithQuote(e) {
-    if (e) e.preventDefault();
     const msg = buildQuoteMessage();
     const url = waUrl(msg);
-    window.open(url, '_blank', 'noopener,noreferrer');
+    const qqSend = $("#qq-send-quote");
+    const waFab = $("#waFab");
+    if (qqSend) qqSend.href = url;
+    if (waFab) waFab.href = url;
+    // allow the default link navigation to proceed so the href stays crawlable
   }
 
   // Attach to FAB and the inline send link
@@ -1197,8 +1200,8 @@ function trackEvent(name, data) {
   }
   if (qqSend) {
     qqSend.addEventListener('click', openWhatsAppWithQuote);
-    // prevent default href navigation if present
-    qqSend.href = 'javascript:void(0)';
+    // set a default crawlable href for bots; it is updated on click with the live message
+    qqSend.href = waUrl();
   }
 
   const qqBudget = $("#qq-budget");
