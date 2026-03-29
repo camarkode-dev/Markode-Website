@@ -393,7 +393,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function reloadChat() {
-    if (!chatBody) return;
+    if (!chatBody || !chatBox?.classList.contains("show")) return;
     startChat();
   }
 
