@@ -766,7 +766,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const isAr = () => document.documentElement.lang === "ar";
 
-  switchLanguage(savedLang);
+  const initialPageLang = document.documentElement.lang || DEFAULT_LANG;
+  if (savedLang && savedLang !== initialPageLang) {
+    switchLanguage(savedLang);
+  }
 
 
 
