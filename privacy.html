@@ -2,11 +2,24 @@
 <html lang="ar" dir="rtl">
 <head>
   <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-NCJ8D2W8');</script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+    function loadGTM() {
+      var f = document.getElementsByTagName('script')[0];
+      var j = document.createElement('script');
+      j.async = true;
+      j.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-NCJ8D2W8';
+      f.parentNode.insertBefore(j, f);
+    }
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(loadGTM, { timeout: 2000 });
+    } else {
+      window.addEventListener('load', function() {
+        setTimeout(loadGTM, 250);
+      });
+    }
+  </script>
   <!-- End Google Tag Manager -->
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -53,7 +66,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <link rel="canonical" href="https://markode.co/privacy.html" />
   <link rel="icon" href="logo-64.png" type="image/png">
   <link rel="preconnect" href="https://www.googletagmanager.com">
-  <link rel="stylesheet" href="style.min.css">
+  <link rel="preload" href="style.min.css" as="style" onload="this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="style.min.css"></noscript>
 </head>
 <body>
 
