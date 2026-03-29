@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NCJ8D2W8');</script>
+  <!-- End Google Tag Manager -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -24,10 +31,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>تواصل معنا | Markode</title>
+  <meta name="description" content="Contact Markode to request a quote for web development, app development, ERP, SEO, Google Ads, Meta Ads and social media management in Saudi Arabia, UAE, Egypt and the GCC." />
+  <meta name="keywords" content="contact Markode, request quote web development, ERP consultation GCC, SEO consultation Saudi Arabia, ads management UAE" />
+  <meta property="og:title" content="Contact Markode | Request a Quote" />
+  <meta property="og:description" content="Talk to Markode about your next website, application, ERP or digital marketing project and get a clear next step." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://markode.co/contact.html" />
+  <meta property="og:image" content="https://markode.co/logo-96.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="canonical" href="https://markode.co/contact.html" />
   <link rel="icon" href="logo-64.png" type="image/png">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NCJ8D2W8"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <div class="language-switch">
     <button id="ar-btn" class="active">AR</button>
@@ -53,7 +73,13 @@
   </section>
 
   <section class="contact-wrapper">
-    <form class="contact-box" action="https://formspree.io/f/xeozlkkv" method="POST" onsubmit="showOrderSuccessMessage(event)">
+    <form id="contactForm" class="contact-box" action="https://formspree.io/f/xeozlkkv" method="POST" onsubmit="showOrderSuccessMessage(event)">
+      <input type="hidden" name="_subject" value="New contact request from Markode website">
+      <input type="hidden" name="_replyto" value="">
+      <input type="hidden" name="source_page" value="contact.html">
+      <input type="hidden" name="source_form" value="contact-page">
+      <input type="hidden" name="site_name" value="Markode">
+      <input type="text" name="_gotcha" class="visually-hidden" tabindex="-1" autocomplete="off" aria-hidden="true">
       <label id="label-name" for="name">الاسم:</label>
       <input type="text" id="name" name="name" required autocomplete="name">
 
@@ -70,12 +96,12 @@
     </form>
   </section>
 
-  <div id="order-success-message"></div>
+  <p id="order-success-message" class="order-success" role="status" aria-live="polite"></p>
 
   <footer>
     <p id="footer-text">جميع الحقوق محفوظة © 2025 Markode</p>
   </footer>
 
-  <script src="app.min.js" defer></script>
+  <script src="app.js" defer></script>
 </body>
 </html>

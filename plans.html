@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NCJ8D2W8');</script>
+  <!-- End Google Tag Manager -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -24,10 +31,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>الباقات | Markode</title>
+  <meta name="description" content="View Markode packages for startups, growing companies and custom projects covering websites, applications, ERP systems and digital marketing across Saudi Arabia, UAE, Egypt and the GCC." />
+  <meta name="keywords" content="pricing packages GCC, website package Saudi Arabia, ERP package UAE, digital marketing plans Egypt, Markode packages" />
+  <meta property="og:title" content="Markode Packages | Web, ERP and Marketing Plans" />
+  <meta property="og:description" content="Flexible packages for launch, growth and custom development with clear deliverables for Gulf market businesses." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://markode.co/plans.html" />
+  <meta property="og:image" content="https://markode.co/logo-96.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="canonical" href="https://markode.co/plans.html" />
   <link rel="icon" href="logo-64.png" type="image/png">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NCJ8D2W8"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <!-- تبديل اللغة -->
   <div class="language-switch">
@@ -56,26 +76,26 @@
   <!-- الباقات -->
   <section class="cards">
     <div class="card">
-      <h2 id="card-title-1">باقة الناشئين</h2>
-      <p id="card-desc-1">تصميم هوية + موقع تعريفي + حملة انطلاقية.</p>
-      <button id="card-btn-1" class="btn">اطلب الآن</button>
+      <h2 id="card-title-1">باقة الانطلاق</h2>
+      <p id="card-desc-1">حلول رقمية مكتملة للشركات الناشئة: هوية بصرية قوية، موقع تعريفي سريع، إعداد SEO أولي، وتتبع الأداء.</p>
+      <button type="button" id="card-btn-1" class="btn">اطلب الآن</button>
     </div>
     <div class="card">
-      <h2 id="card-title-2">باقة الشركات</h2>
-      <p id="card-desc-2">حلول متكاملة للتسويق وتطوير المواقع للشركات.</p>
-      <button id="card-btn-2" class="btn">اطلب الآن</button>
+      <h2 id="card-title-2">باقة النمو</h2>
+      <p id="card-desc-2">باقة متكاملة للأعمال: موقع احترافي أو متجر إلكتروني، حملات تسويق رقمي، تحسين محركات البحث، ودعم قياس التحويل.</p>
+      <button type="button" id="card-btn-2" class="btn">اطلب الآن</button>
     </div>
     <div class="card">
-      <h2 id="card-title-3">باقة التطوير</h2>
-      <p id="card-desc-3">خدمة تطوير تطبيق أو نظام مخصص حسب الطلب.</p>
-       <button id="card-btn-3" class="btn">تواصل معنا</button>
+      <h2 id="card-title-3">باقة التوسع</h2>
+      <p id="card-desc-3">خدمات متقدمة للشركات الكبرى: تطبيقات مخصصة، أنظمة إدارة، تكامل APIs، دعم تحليلي وتقارير أداء مستمرة.</p>
+       <button type="button" id="card-btn-3" class="btn">تواصل معنا</button>
     </div>
   </section>
 
   <!-- نافذة الطلب -->
   <div id="orderModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal()">&times;</span>
+    <div class="modal-content" tabindex="-1" aria-modal="true" role="dialog">
+      <button type="button" class="close" id="orderModalCloseBtn" aria-label="إغلاق" onclick="closeModal()">&times;</button>
       <center><h3 id="modal-title">طلب الباقة</h3></center>
 
       <form action="https://formspree.io/f/xeozlkkv" method="POST" onsubmit="showOrderSuccessMessage(event)">
@@ -99,6 +119,6 @@
     <p id="footer-text">جميع الحقوق محفوظة © 2025 Markode</p>
   </footer>
 
-  <script src="app.min.js" defer></script>
+  <script src="app.js" defer></script>
 </body>
 </html>
