@@ -6,19 +6,20 @@
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
     function loadGTM() {
-      var f = document.getElementsByTagName('script')[0];
-      var j = document.createElement('script');
-      j.async = true;
-      j.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-NCJ8D2W8';
-      f.parentNode.insertBefore(j, f);
+      if (window.__markodeGtmLoaded) return;
+      window.__markodeGtmLoaded = true;
+      var firstScript = document.getElementsByTagName('script')[0];
+      var gtmScript = document.createElement('script');
+      gtmScript.async = true;
+      gtmScript.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-NCJ8D2W8';
+      firstScript.parentNode.insertBefore(gtmScript, firstScript);
     }
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(loadGTM, { timeout: 2000 });
-    } else {
-      window.addEventListener('load', function() {
-        setTimeout(loadGTM, 250);
-      });
-    }
+    ['pointerdown', 'keydown', 'touchstart', 'scroll'].forEach(function(eventName) {
+      window.addEventListener(eventName, loadGTM, { once: true, passive: true });
+    });
+    window.addEventListener('load', function() {
+      setTimeout(loadGTM, 10000);
+    }, { once: true });
   </script>
   <!-- End Google Tag Manager -->
   <script>
@@ -66,7 +67,8 @@
   <link rel="canonical" href="https://markode.co/plans.html" />
   <link rel="icon" href="logo-64.png" type="image/png">
   <link rel="preconnect" href="https://www.googletagmanager.com">
-  <link rel="stylesheet" href="style.min.css">
+  <link rel="preload" href="style.min.css" as="style" fetchpriority="high" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="style.min.css"></noscript>
 </head>
 <body>
 
