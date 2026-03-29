@@ -1386,6 +1386,7 @@ section h1 {
 
 #packages-title {
   margin-bottom: 40px;
+  text-align: center;
 }
 
 /* Quote Section Box ✅ */
@@ -1431,6 +1432,7 @@ section h1 {
 #projects-title {
   margin-bottom: 40px;
   font-size: 32px;
+  text-align: center;
 }
 
 /* Ads Title ✅ */
