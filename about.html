@@ -65,10 +65,23 @@
   <meta name="twitter:image" content="https://markode.co/piuter-optimized.jpg" />
   <meta name="twitter:image:alt" content="About Markode and its software and marketing services" />
   <link rel="canonical" href="https://markode.co/about.html" />
+  <script>
+    (function() {
+      try {
+        var savedLang = localStorage.getItem('markode_lang');
+        if (savedLang === 'en') {
+          document.documentElement.lang = 'en';
+          document.documentElement.dir = 'ltr';
+        } else if (savedLang === 'ar') {
+          document.documentElement.lang = 'ar';
+          document.documentElement.dir = 'rtl';
+        }
+      } catch (e) {}
+    })();
+  </script>
   <link rel="icon" href="logo-64.png" type="image/png">
   <link rel="preconnect" href="https://www.googletagmanager.com">
-  <link rel="preload" href="style.min.css" as="style" fetchpriority="high" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="style.min.css"></noscript>
+  <link rel="stylesheet" href="style.min.css">
 </head>
 <body>
 

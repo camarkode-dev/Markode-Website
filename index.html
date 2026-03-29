@@ -48,6 +48,20 @@
 
   <!-- Canonical -->
   <link rel="canonical" href="https://markode.co/" />
+  <script>
+    (function() {
+      try {
+        var savedLang = localStorage.getItem('markode_lang');
+        if (savedLang === 'en') {
+          document.documentElement.lang = 'en';
+          document.documentElement.dir = 'ltr';
+        } else if (savedLang === 'ar') {
+          document.documentElement.lang = 'ar';
+          document.documentElement.dir = 'rtl';
+        }
+      } catch (e) {}
+    })();
+  </script>
 
   <!-- Basic SEO -->
   <meta charset="UTF-8" />
@@ -89,8 +103,7 @@
   <link rel="preconnect" href="https://www.googletagmanager.com">
 
   <!-- Performance -->
-  <link rel="preload" href="style.min.css" as="style" fetchpriority="high" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="style.min.css"></noscript>
+  <link rel="stylesheet" href="style.min.css">
   <link rel="preload" href="piuter-lcp-662.jpg" as="image" fetchpriority="high" imagesrcset="piuter-lcp-662.jpg 662w, piuter-lcp.jpg 720w" imagesizes="(max-width: 720px) 100vw, 662px">
 
   <script type="application/ld+json">
