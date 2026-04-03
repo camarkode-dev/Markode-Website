@@ -37,3 +37,27 @@
   for = "/*.js"
   [headers.values]
     Cache-Control = "public, max-age=2592000, immutable"
+
+[[redirects]]
+  from = "http://markode.co/*"
+  to = "https://markode.co/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.markode.co/*"
+  to = "https://markode.co/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://www.markode.co/*"
+  to = "https://markode.co/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/index.html"
+  to = "/"
+  status = 301
+  force = true

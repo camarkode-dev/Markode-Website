@@ -9,5 +9,27 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "http://markode.co/:path*",
+      "destination": "https://markode.co/:path*",
+      "permanent": true
+    },
+    {
+      "source": "https://www.markode.co/:path*",
+      "destination": "https://markode.co/:path*",
+      "permanent": true
+    },
+    {
+      "source": "http://www.markode.co/:path*",
+      "destination": "https://markode.co/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    }
   ]
 }
